@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from models import db, Message  # assuming Message model is correctly defined
+from models import db, Message  
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -10,13 +10,13 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 migrate = Migrate(app, db)
 
-# Get all messages
+
 @app.route('/messages', methods=['GET'])
 def get_messages():
     messages = Message.query.all()
     return jsonify([message.to_dict() for message in messages]), 200
 
-# Create a new message
+
 @app.route('/messages', methods=['POST'])
 def post_message():
     data = request.get_json()
@@ -28,7 +28,6 @@ def post_message():
     db.session.commit()
     return jsonify(message.to_dict()), 201
 
-# Update a message
 @app.route('/messages/<int:id>', methods=['PATCH'])
 def update_message(id):
     message = Message.query.get(id)
@@ -40,7 +39,6 @@ def update_message(id):
     db.session.commit()
     return jsonify(message.to_dict()), 200
 
-# Delete a message
 @app.route('/messages/<int:id>', methods=['DELETE'])
 def delete_message(id):
     message = Message.query.get(id)
